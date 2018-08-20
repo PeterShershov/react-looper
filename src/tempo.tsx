@@ -23,7 +23,7 @@ export default class Tempo extends PureComponent<TempoProps> {
     this.props.onTick(this.state.counter);
   };
 
-  start = (): void => {
+  play = (): void => {
     this.oscillator.connect(this.audioContext.destination);
     this.oscillator.frequency.value = this.state.frequency;
     this.oscillator.start;
@@ -41,7 +41,7 @@ export default class Tempo extends PureComponent<TempoProps> {
   render() {
     return React.Children.map(this.props.children, child => {
       React.cloneElement(child as React.ReactElement<any>, {
-        startTempo: this.start,
+        startTempo: this.play,
         stopTempo: this.stop,
         setBpm: this.setBpm,
         setFrequency: this.setFrequency,
