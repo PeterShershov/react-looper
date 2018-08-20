@@ -29,7 +29,7 @@ export default class Tempo extends PureComponent<TempoProps> {
     this.oscillator.start;
     this.oscillator.stop(this.audioContext.currentTime + 0.03);
     this.ping();
-    this.state.isPlaying && setTimeout(this.start, bpm2ms(this.state.bpm));
+    this.state.isPlaying && setTimeout(this.play, bpm2ms(this.state.bpm));
   };
 
   stop = (): void => this.setState({ isPlaying: false, counter: 0 });
