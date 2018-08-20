@@ -12,5 +12,8 @@
     "jest": "^23.5.0",
     "ts-jest": "^23.1.4",
     "typescript": "^3.0.1"
+  },
+  "dependencies": {
+    "react": "^16.4.2"
   }
 }
