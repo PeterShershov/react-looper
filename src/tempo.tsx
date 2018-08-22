@@ -70,7 +70,7 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
     });
   };
 
-  private play = (): void => {
+  private play = () => {
     if (this.audioContext && this.oscillator) {
       this.oscillator.frequency.value = this.props.frequency;
       this.oscillator.start;
@@ -79,7 +79,7 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
     }
   };
 
-  private stop = (): void => {
+  private stop = () => {
     this.oscillator!.stop();
     clearInterval(this.state.intervalId);
   };
