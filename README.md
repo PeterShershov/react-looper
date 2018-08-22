@@ -24,7 +24,7 @@ import Looper from "react-looper";
 | Name        | Type          | Default   | Description                          |
 | :---------- | :------------ | :-------- | :----------------------------------- |
 | `looping`   | `boolean`     | false     | Starts or stops your loop            |
-| `source`    | `AudioBuffer` | undefined | Audio buffer to play each iteration. |
+| `source`    | `AudioBuffer` | undefined | Audio buffer to play each iteration  |
 | `bpm`       | `number`      | 100       | Sets the tempo of your loop          |
 | `frequency` | `number`      | 500       | Sets the frequency of the oscillator |
 | `onTick`    | `function`    | () => {}  | Function to invoke each iteration    |
