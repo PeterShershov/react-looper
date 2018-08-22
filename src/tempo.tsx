@@ -1,10 +1,11 @@
 import React, { PureComponent } from "react";
 
 interface LooperProps {
-  onTick: () => void;
-  frequency: number;
-  bpm: number;
   looping: boolean;
+	source: AudioBuffer;
+  bpm: number;
+  frequency: number;
+	onTick: () => void;
 }
 
 interface LooperState {
@@ -19,9 +20,9 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
   };
 
   static defaultProps = {
+		looping: false,
     bpm: 100,
     frequency: 500,
-    looping: false
   };
 
   private audioContext: AudioContext | undefined;
@@ -69,6 +70,7 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
       intervalId
     });
   };
+
 
   private play = () => {
     if (this.audioContext && this.oscillator) {
