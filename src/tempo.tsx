@@ -1,17 +1,19 @@
 import React, { PureComponent } from "react";
 
-interface TempoProps {
+interface LooperProps {
   onTick: () => void;
   frequency: number;
   bpm: number;
   looping: boolean;
 }
 
-interface TempoState {
+interface LooperState {
   intervalId: number;
 }
 
-export default class Tempo extends PureComponent<TempoProps, TempoState> {
+const bpmToMs = (bpm: number) => Math.floor(60000 / bpm);
+
+export default class Looper extends PureComponent<LooperProps, LooperState> {
   state = {
     intervalId: 0
   };
@@ -42,17 +44,16 @@ export default class Tempo extends PureComponent<TempoProps, TempoState> {
     frequency: prevFrequency,
     bpm: prevBpm,
     looping: isLoopingAlready
-  }: TempoProps) {
+  }: LooperProps) {
     const {
       frequency: newFrequency,
       bpm: newBpm,
       looping: shouldLoop
     } = this.props;
 
-    const shouldReset = newFrequency !== prevFrequency || newBpm !== prevBpm;
+		const shouldReset = newFrequency !== prevFrequency || newBpm !== prevBpm;
 
     !isLoopingAlready && shouldLoop && this.play();
-
     isLoopingAlready && !shouldLoop && this.stop();
 
     if (isLoopingAlready && shouldReset) {
@@ -61,7 +62,7 @@ export default class Tempo extends PureComponent<TempoProps, TempoState> {
     }
   }
 
-  loop = () => {
+  private loop = () => {
     const intervalId = setInterval(this.play, bpmToMs(this.props.bpm));
 
     this.setState({
@@ -69,7 +70,7 @@ export default class Tempo extends PureComponent<TempoProps, TempoState> {
     });
   };
 
-  play = (): void => {
+  private play = (): void => {
     if (this.audioContext && this.oscillator) {
       this.oscillator.frequency.value = this.props.frequency;
       this.oscillator.start;
@@ -78,7 +79,7 @@ export default class Tempo extends PureComponent<TempoProps, TempoState> {
     }
   };
 
-  stop = (): void => {
+  private stop = (): void => {
     this.oscillator!.stop();
     clearInterval(this.state.intervalId);
   };
@@ -86,8 +87,4 @@ export default class Tempo extends PureComponent<TempoProps, TempoState> {
   render() {
     return null;
   }
-}
-
-function bpmToMs(bpm: number): number {
-  return Math.floor(60000 / bpm);
 }
