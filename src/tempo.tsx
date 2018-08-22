@@ -1,52 +1,93 @@
 import React, { PureComponent } from "react";
 
-import bpm2ms from "./bpm-to-ms";
-
 interface TempoProps {
-  onTick: (counter: number) => any;
+  onTick: () => void;
+  frequency: number;
+  bpm: number;
+  looping: boolean;
 }
 
-export default class Tempo extends PureComponent<TempoProps> {
+interface TempoState {
+  intervalId: number;
+}
+
+export default class Tempo extends PureComponent<TempoProps, TempoState> {
   state = {
-    bpm: 100,
-    frequency: 500,
-    counter: 0,
-    isPlaying: false
+    intervalId: 0
   };
 
-  private audioContext = new AudioContext();
+  static defaultProps = {
+    bpm: 100,
+    frequency: 500,
+    looping: false
+  };
 
-  private oscillator: OscillatorNode = this.audioContext.createOscillator();
+  private audioContext: AudioContext | undefined;
+  private oscillator: OscillatorNode | undefined;
 
-  ping = (): void => {
-    this.setState({ counter: this.state.counter++ });
-    this.props.onTick(this.state.counter);
+  componentDidMount() {
+    this.audioContext = new AudioContext();
+    this.oscillator = this.audioContext.createOscillator();
+    this.oscillator.connect(this.audioContext.destination);
+    this.props.looping && this.play();
+  }
+
+  componentWillUnmount() {
+    this.stop();
+    this.audioContext = undefined;
+    this.oscillator = undefined;
+  }
+
+  componentDidUpdate({
+    frequency: prevFrequency,
+    bpm: prevBpm,
+    looping: isLoopingAlready
+  }: TempoProps) {
+    const {
+      frequency: newFrequency,
+      bpm: newBpm,
+      looping: shouldLoop
+    } = this.props;
+
+    const shouldReset = newFrequency !== prevFrequency || newBpm !== prevBpm;
+
+    !isLoopingAlready && shouldLoop && this.play();
+
+    isLoopingAlready && !shouldLoop && this.stop();
+
+    if (isLoopingAlready && shouldReset) {
+      clearInterval(this.state.intervalId);
+      this.loop();
+    }
+  }
+
+  loop = () => {
+    const intervalId = setInterval(this.play, bpmToMs(this.props.bpm));
+
+    this.setState({
+      intervalId
+    });
   };
 
   play = (): void => {
-    this.oscillator.connect(this.audioContext.destination);
-    this.oscillator.frequency.value = this.state.frequency;
-    this.oscillator.start;
-    this.oscillator.stop(this.audioContext.currentTime + 0.03);
-    this.ping();
-    this.state.isPlaying && setTimeout(this.play, bpm2ms(this.state.bpm));
+    if (this.audioContext && this.oscillator) {
+      this.oscillator.frequency.value = this.props.frequency;
+      this.oscillator.start;
+      this.oscillator.stop(this.audioContext.currentTime + 0.03);
+      this.props.onTick && this.props.onTick();
+    }
   };
 
-  stop = (): void => this.setState({ isPlaying: false, counter: 0 });
-
-  setBpm = (bpm: number): void => this.setState({ bpm });
-
-  setFrequency = (frequency: number): void => this.setState({ frequency });
+  stop = (): void => {
+    this.oscillator!.stop();
+    clearInterval(this.state.intervalId);
+  };
 
   render() {
-    return React.Children.map(this.props.children, child => {
-      React.cloneElement(child as React.ReactElement<any>, {
-        startTempo: this.play,
-        stopTempo: this.stop,
-        setBpm: this.setBpm,
-        setFrequency: this.setFrequency,
-        bpm: this.state.bpm
-      });
-    });
+    return null;
   }
+}
+
+function bpmToMs(bpm: number): number {
+  return Math.floor(60000 / bpm);
 }
