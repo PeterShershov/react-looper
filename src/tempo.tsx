@@ -12,6 +12,8 @@ interface LooperState {
   intervalId: number;
 }
 
+const SINE_LENGTH = 0.03;
+
 const bpmToMs = (bpm: number) => Math.floor(60000 / bpm);
 
 export default class Looper extends PureComponent<LooperProps, LooperState> {
@@ -71,12 +73,11 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
     });
   };
 
-
   private play = () => {
     if (this.audioContext && this.oscillator) {
       this.oscillator.frequency.value = this.props.frequency;
       this.oscillator.start;
-      this.oscillator.stop(this.audioContext.currentTime + 0.03);
+      this.oscillator.stop(this.audioContext.currentTime + SINE_LENGTH);
       this.props.onTick && this.props.onTick();
     }
   };
