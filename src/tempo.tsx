@@ -2,10 +2,10 @@ import React, { PureComponent } from "react";
 
 interface LooperProps {
   looping: boolean;
-	source: AudioBuffer;
+  source: AudioBuffer;
   bpm: number;
   frequency: number;
-	onTick: () => void;
+  onTick: () => void;
 }
 
 interface LooperState {
@@ -22,9 +22,9 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
   };
 
   static defaultProps = {
-		looping: false,
+    looping: false,
     bpm: 100,
-    frequency: 500,
+    frequency: 500
   };
 
   private audioContext: AudioContext | undefined;
@@ -54,7 +54,7 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
       looping: shouldLoop
     } = this.props;
 
-		const shouldReset = newFrequency !== prevFrequency || newBpm !== prevBpm;
+    const shouldReset = newFrequency !== prevFrequency || newBpm !== prevBpm;
 
     !isLoopingAlready && shouldLoop && this.play();
     isLoopingAlready && !shouldLoop && this.stop();
