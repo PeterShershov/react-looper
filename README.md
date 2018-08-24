@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/react-looper.svg)](https://badge.fury.io/js/react-looper)
+
 # React-Looper
 
 Web Audio API based looper for React.js
