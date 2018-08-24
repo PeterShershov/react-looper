@@ -1,5 +1,3 @@
-STILL IN DEVELOPMENT. NOT WORKING YET :)
-
 # React-Looper
 
 Web Audio API based looper for React.js
