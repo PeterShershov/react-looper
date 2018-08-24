@@ -50,14 +50,17 @@ class MyPlayer extends PureComponent {
     return (
       <Fragment>
         <PlayButton onClick={this.play}>PLAY</PlayButton>
+        <StopButton onClick={this.stop}>STOP</StopButton>
         <FrequencyInput onChange={this.changeBpm} value={bpm} />
         <BPMInput onChange={this.changeFrequency} value={frequency} />
-        <Looper
+        
           onIteration={this.onIteration}
-          bpm={bpm}
+        <Looper
           frequency={frequency}
           looping={isPlaying}
+          bpm={bpm}
         />
+
       </Fragment>
     );
   }
