@@ -1,7 +1,7 @@
 # React-Looper
 [![npm version](https://badge.fury.io/js/react-looper.svg)](https://badge.fury.io/js/react-looper)
 
-Audio Looper for React
+React component that can play an audio source or a sine wave oscillator in a loop.
 
 # Installation and usage
 
