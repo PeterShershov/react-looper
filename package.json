@@ -1,6 +1,6 @@
 {
   "name": "react-looper",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Audio Looper for React based on Web Audio API",
   "main": "./cjs/looper.js",
   "module": "./esm/looper.js",
