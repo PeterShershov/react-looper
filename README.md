@@ -2,8 +2,6 @@
 
 Web Audio API based looper for React.js
 
-[DEMO](looper-shmooper.com)
-
 # Installation and usage
 
 ```
