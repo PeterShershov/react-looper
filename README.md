@@ -12,11 +12,53 @@ Web Audio API based looper for React.js
 yarn add react-looper
 ```
 
-```ts
-import React from "react";
+```jsx
 import Looper from "react-looper";
 
-// TO DO: WRITE EXAPMLE
+class MyPlayer extends PureComponent {
+  state = {
+    bpm: 120,
+    frequency: 500,
+    isLooping: false
+  };
+
+  play = () =>
+    this.setState({
+      playing: !this.state.playing
+    });
+
+  changeBpm = e => {
+    const bpm = e.target.value;
+    this.setState({ bpm });
+  };
+
+  changeFrequency = e => {
+    const frequency = e.target.value;
+    this.setState({ frequency });
+  };
+
+  onIteration = () => {
+    // do stuff
+  };
+
+  render() {
+    const { bpm, frequency, isLooping } = this.state;
+
+    return (
+      <Fragment>
+        <PlayButton onClick={this.play}>PLAY</PlayButton>
+        <FrequencyInput onChange={this.changeBpm} value={bpm} />
+        <BPMInput onChange={this.changeFrequency} value={frequency} />
+        <Looper
+          onIteration={this.onIteration}
+          bpm={bpm}
+          frequency={frequency}
+          looping={isLooping}
+        />
+      </Fragment>
+    );
+  }
+}
 ```
 
 ## Available Props
@@ -27,7 +69,7 @@ import Looper from "react-looper";
 | `source`    | `AudioBuffer` | undefined | Audio buffer to play each iteration  |
 | `bpm`       | `number`      | 100       | Sets the tempo of your loop          |
 | `frequency` | `number`      | 500       | Sets the frequency of the oscillator |
-| `onTick`    | `function`    | () => {}  | Function to invoke each iteration    |
+| `onIteration`    | `function`    | () => {}  | Function to invoke each iteration    |
 
 If `source` is not provided, Looper will play a short sine that can be used as a metronome.
 
