@@ -22,7 +22,12 @@ class MyPlayer extends PureComponent {
 
   play = () =>
     this.setState({
-      isPlaying: !this.state.isPlaying
+      isPlaying: true
+    });
+
+  stop = () =>
+    this.setState({
+      isPlaying: false
     });
 
   changeBpm = e => {
