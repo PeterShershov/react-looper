@@ -1,7 +1,7 @@
 # React-Looper
 [![npm version](https://badge.fury.io/js/react-looper.svg)](https://badge.fury.io/js/react-looper)
 
-Audio Looper for React based on Web Audio API
+Audio Looper for React
 
 # Installation and usage
 
