@@ -16,12 +16,12 @@ class MyPlayer extends PureComponent {
   state = {
     bpm: 120,
     frequency: 500,
-    isLooping: false
+    isPlaying: false
   };
 
   play = () =>
     this.setState({
-      playing: !this.state.playing
+      isPlaying: !this.state.isPlaying
     });
 
   changeBpm = e => {
@@ -39,7 +39,7 @@ class MyPlayer extends PureComponent {
   };
 
   render() {
-    const { bpm, frequency, isLooping } = this.state;
+    const { bpm, frequency, isPlaying } = this.state;
 
     return (
       <Fragment>
@@ -50,7 +50,7 @@ class MyPlayer extends PureComponent {
           onIteration={this.onIteration}
           bpm={bpm}
           frequency={frequency}
-          looping={isLooping}
+          looping={isPlaying}
         />
       </Fragment>
     );
