@@ -2,7 +2,7 @@ import { PureComponent } from "react";
 
 interface LooperProps {
   looping: boolean;
-  source?: AudioBuffer;
+  source?: ArrayBuffer;
   bpm: number;
   frequency: number;
   onIteration?: () => void;
