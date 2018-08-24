@@ -54,8 +54,8 @@ class MyPlayer extends PureComponent {
         <FrequencyInput onChange={this.changeBpm} value={bpm} />
         <BPMInput onChange={this.changeFrequency} value={frequency} />
         
-          onIteration={this.onIteration}
         <Looper
+          onIteration={this.onIteration}
           frequency={frequency}
           looping={isPlaying}
           bpm={bpm}
