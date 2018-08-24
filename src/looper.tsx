@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import { PureComponent } from "react";
 
 interface LooperProps {
   looping: boolean;
@@ -44,7 +44,7 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
   componentDidUpdate({
     frequency: prevFrequency,
     bpm: prevBpm,
-    looping: isLoopingAlready
+    looping: loopingAlready
   }: LooperProps) {
     const {
       frequency: newFrequency,
@@ -53,10 +53,10 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
     } = this.props;
     const shouldReset = newFrequency !== prevFrequency || newBpm !== prevBpm;
 
-    !isLoopingAlready && shouldLoop && this.loop();
-    isLoopingAlready && !shouldLoop && this.stop();
+    !loopingAlready && shouldLoop && this.loop();
+    loopingAlready && !shouldLoop && this.stop();
 
-    if (isLoopingAlready && shouldReset) {
+    if (loopingAlready && shouldReset) {
       clearInterval(this.state.intervalId);
       this.loop();
     }
@@ -81,8 +81,8 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
   private play = () => {
     if (this.audioContext && !this.props.source) {
       // creating an oscillator each iteration is necessary
-      // as oscillator.stop disconnects automatically 
-      this.createOscillator();  
+      // as oscillator.stop disconnects automatically
+      this.createOscillator();
       this.oscillator!.frequency.value = this.props.frequency;
       this.oscillator!.start();
       this.oscillator!.stop(this.audioContext.currentTime + SINE_DURATION);
