@@ -1,7 +1,8 @@
 # React-Looper
+
 [![npm version](https://badge.fury.io/js/react-looper.svg)](https://badge.fury.io/js/react-looper)
 
-Play an audio source or a sine wave oscillator in a loop.
+Play an audio source or a sine wave in a loop
 
 # Installation and usage
 
@@ -60,15 +61,15 @@ class MyPlayer extends PureComponent {
 
 ## Available Props
 
-| Name        | Type          | Default   | Description                          |
-| :---------- | :------------ | :-------- | :----------------------------------- |
-| `looping`   | `boolean`     | false     | starts or stops your loop            |
-| `source`    | `AudioBuffer` | undefined | audio buffer to play each iteration  |
-| `bpm`       | `number`      | 120       | sets the tempo of your loop          |
-| `frequency` | `number`      | 500       | sets the frequency of the oscillator |
-| `onIteration`    | `function`    | () => {}  | function to invoke each iteration    |
+| Name          | Type          | Default   | Description                                               |
+| :------------ | :------------ | :-------- | :-------------------------------------------------------- |
+| `looping`     | `boolean`     | false     | starts or stops your loop                                 |
+| `source`      | `AudioBuffer` | undefined | audio buffer to play each iteration - NOT IMPLEMENTED YET |
+| `bpm`         | `number`      | 120       | sets the tempo of your loop                               |
+| `frequency`   | `number`      | 500       | sets the frequency of the oscillator                      |
+| `onIteration` | `function`    | () => {}  | function to invoke each iteration                         |
 
-If `source` is not provided, Looper will play a short sine that can be used as a metronome.
+If `source` is not provided, Looper will play a short sine that can be used as a metronome
 
 ## License
 
