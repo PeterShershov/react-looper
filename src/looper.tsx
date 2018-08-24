@@ -2,17 +2,17 @@ import React, { PureComponent } from "react";
 
 interface LooperProps {
   looping: boolean;
-  source: AudioBuffer;
+  source?: AudioBuffer;
   bpm: number;
   frequency: number;
-  onTick: () => void;
+  onIteration?: () => void;
 }
 
 interface LooperState {
   intervalId: number;
 }
 
-const SINE_LENGTH = 0.03;
+const SINE_DURATION = 0.03;
 
 const bpmToMs = (bpm: number) => Math.floor(60000 / bpm);
 
@@ -23,7 +23,7 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
 
   static defaultProps = {
     looping: false,
-    bpm: 100,
+    bpm: 120,
     frequency: 500
   };
 
@@ -32,9 +32,7 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
 
   componentDidMount() {
     this.audioContext = new AudioContext();
-    this.oscillator = this.audioContext.createOscillator();
-    this.oscillator.connect(this.audioContext.destination);
-    this.props.looping && this.play();
+    this.props.looping && this.loop();
   }
 
   componentWillUnmount() {
@@ -53,10 +51,9 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
       bpm: newBpm,
       looping: shouldLoop
     } = this.props;
-
     const shouldReset = newFrequency !== prevFrequency || newBpm !== prevBpm;
 
-    !isLoopingAlready && shouldLoop && this.play();
+    !isLoopingAlready && shouldLoop && this.loop();
     isLoopingAlready && !shouldLoop && this.stop();
 
     if (isLoopingAlready && shouldReset) {
@@ -65,7 +62,15 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
     }
   }
 
+  private createOscillator = () => {
+    if (this.audioContext) {
+      this.oscillator = this.audioContext.createOscillator();
+      this.oscillator.connect(this.audioContext.destination);
+    }
+  };
+
   private loop = () => {
+    this.play();
     const intervalId = setInterval(this.play, bpmToMs(this.props.bpm));
 
     this.setState({
@@ -74,16 +79,19 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
   };
 
   private play = () => {
-    if (this.audioContext && this.oscillator) {
-      this.oscillator.frequency.value = this.props.frequency;
-      this.oscillator.start;
-      this.oscillator.stop(this.audioContext.currentTime + SINE_LENGTH);
-      this.props.onTick && this.props.onTick();
+    if (this.audioContext && !this.props.source) {
+      // creating an oscillator each iteration is necessary
+      // as oscillator.stop disconnects automatically 
+      this.createOscillator();  
+      this.oscillator!.frequency.value = this.props.frequency;
+      this.oscillator!.start();
+      this.oscillator!.stop(this.audioContext.currentTime + SINE_DURATION);
+
+      this.props.onIteration && this.props.onIteration();
     }
   };
 
   private stop = () => {
-    this.oscillator!.stop();
     clearInterval(this.state.intervalId);
   };
 
