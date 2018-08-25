@@ -2,10 +2,10 @@ import { PureComponent } from "react";
 
 interface LooperProps {
   looping: boolean;
-  source?: ArrayBuffer;
   bpm: number;
   frequency: number;
   onIteration?: () => void;
+  source?: ArrayBuffer;
 }
 
 interface LooperState {
@@ -29,9 +29,15 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
 
   private audioContext: AudioContext | undefined;
   private oscillator: OscillatorNode | undefined;
+  private audioBufferSource: AudioBufferSourceNode | undefined;
 
   componentDidMount() {
     this.audioContext = new AudioContext();
+
+    if (this.props.source) {
+      this.createAudioSourceBuffer();
+    }
+
     this.props.looping && this.loop();
   }
 
@@ -54,13 +60,24 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
     this.oscillator!.frequency.value = this.props.frequency;
   };
 
+  private createAudioSourceBuffer = () => {
+    this.audioContext!.decodeAudioData(this.props.source!, buffer => {
+      this.audioBufferSource = this.audioContext!.createBufferSource();
+      this.audioBufferSource.buffer = buffer;
+    });
+  };
+
   private loop = () => {
-    // creating an oscillator each iteration is necessary
-    // as oscillator.stop disconnects automatically
-    this.createOscillator();
-    this.oscillator!.start();
-    this.oscillator!.stop(this.audioContext!.currentTime + SINE_DURATION);
-    this.props.onIteration && this.props.onIteration();
+    if (this.props.source) {
+      this.audioBufferSource!.start();
+    } else {
+      // creating an oscillator each iteration is necessary
+      // as oscillator.stop disconnects automatically
+      this.createOscillator();
+      this.oscillator!.start();
+      this.oscillator!.stop(this.audioContext!.currentTime + SINE_DURATION);
+      this.props.onIteration && this.props.onIteration();
+		}
 
     this.props.looping &&
       this.setState({
