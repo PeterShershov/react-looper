@@ -33,11 +33,7 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
 
   componentDidMount() {
     this.audioContext = new AudioContext();
-
-    if (this.props.source) {
-      this.createAudioSourceBuffer();
-    }
-
+    this.props.source && this.createAudioSourceBuffer();
     this.props.looping && this.loop();
   }
 
@@ -60,11 +56,10 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
     this.oscillator!.frequency.value = this.props.frequency;
   };
 
-  private createAudioSourceBuffer = () => {
-    this.audioContext!.decodeAudioData(this.props.source!, buffer => {
-      this.audioBufferSource = this.audioContext!.createBufferSource();
-      this.audioBufferSource.buffer = buffer;
-    });
+  private createAudioSourceBuffer = async () => {
+    const buffer = await this.audioContext!.decodeAudioData(this.props.source!);
+    this.audioBufferSource = this.audioContext!.createBufferSource();
+    this.audioBufferSource.buffer = buffer;
   };
 
   private loop = () => {
@@ -77,7 +72,7 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
       this.oscillator!.start();
       this.oscillator!.stop(this.audioContext!.currentTime + SINE_DURATION);
       this.props.onIteration && this.props.onIteration();
-		}
+    }
 
     this.props.looping &&
       this.setState({
