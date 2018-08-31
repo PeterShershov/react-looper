@@ -1,12 +1,13 @@
 {
   "name": "react-looper",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Audio Looper for React",
   "main": "./cjs/looper.js",
   "module": "./esm/looper.js",
   "types": "./esm/looper.d.ts",
   "scripts": {
-    "prebuild": "yarn clean",
+		"prebuild": "yarn clean",
+    "prepublish": "yarn build",
     "clean": "rimraf ./cjs ./esm",
     "build": "run-p build:cjs build:esm",
     "build:cjs": "tsc --outDir cjs --module commonjs",
