@@ -71,7 +71,7 @@ class MyPlayer extends PureComponent {
 | Name          | Type          | Default   | Description                                               |
 | :------------ | :------------ | :-------- | :-------------------------------------------------------- |
 | `looping`     | `boolean`     | false     | starts or stops your loop                                 |
-| `source`      | `AudioBuffer` | undefined | audio buffer to play each iteration - NOT IMPLEMENTED YET |
+| `source`      | `AudioBuffer` | undefined | audio buffer to play each iteration                       |
 | `bpm`         | `number`      | 120       | sets the tempo of your loop                               |
 | `frequency`   | `number`      | 500       | sets the frequency of the oscillator                      |
 | `onIteration` | `function`    | () => {}  | function to invoke each iteration                         |
