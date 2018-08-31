@@ -6,6 +6,7 @@ interface LooperProps {
   frequency: number;
   source?: ArrayBuffer;
   onIteration?: () => void;
+  playEach?: number;
   audioContext: AudioContext;
 }
 
@@ -82,14 +83,17 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
   };
 
   private loop = () => {
-    const { source } = this.props;
+    const { bpm, source, playEach } = this.props;
 
     source ? this.playAudioBufferSourceNode() : this.playOscillator();
     this.props.onIteration && this.props.onIteration();
+
+    const ms = playEach ? bpmToMs(bpm) * playEach : bpmToMs(bpm);
+
     this.props.looping &&
       this.setState({
         // saves the timeout id to clear it on stop
-        timeoutId: setTimeout(this.loop, bpmToMs(this.props.bpm))
+        timeoutId: setTimeout(this.loop, ms)
       });
   };
 
