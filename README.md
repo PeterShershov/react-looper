@@ -2,8 +2,6 @@
 
 Play an audio source or a sine wave in a loop
 
-[![npm version](https://badge.fury.io/js/react-looper.svg)](https://badge.fury.io/js/react-looper)
-
 # Installation and usage
 
 ```
