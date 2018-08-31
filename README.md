@@ -44,21 +44,27 @@ class MyPlayer extends PureComponent {
     // do stuff
   };
 
+  setSource = source => this.setState({ source });
+
   render() {
-    const { bpm, frequency, isPlaying } = this.state;
+    const { bpm, source, isPlaying, frequency } = this.state;
 
     return (
       <Fragment>
-        <PlayButton onClick={this.play}>PLAY</PlayButton>
-        <StopButton onClick={this.stop}>STOP</StopButton>
+        <AudioUpload onChange={this.setSource} />
         <FrequencyInput onChange={this.changeFrequency} value={frequency} />
         <BPMInput onChange={this.changeBpm} value={bpm} />
 
+        <PlayButton onClick={this.play}>PLAY</PlayButton>
+        <StopButton onClick={this.stop}>STOP</StopButton>
+
         <Looper
-          onIteration={this.onIteration}
-          frequency={frequency}
-          looping={isPlaying}
           bpm={bpm}
+          playEach={4}
+          source={source}
+          looping={isPlaying}
+          frequency={frequency}
+          onIteration={this.onIteration}
         />
       </Fragment>
     );
@@ -71,7 +77,7 @@ class MyPlayer extends PureComponent {
 | Name          | Type          | Default   | Description                          |
 | :------------ | :------------ | :-------- | :----------------------------------- |
 | `looping`     | `boolean`     | false     | starts or stops your loop            |
-| `source`      | `AudioBuffer` | undefined | audio buffer to play each iteration  |
+| `source`      | `ArrayBuffer` | undefined | array buffer to play each iteration  |
 | `bpm`         | `number`      | 120       | sets the tempo of your loop          |
 | `frequency`   | `number`      | 500       | sets the frequency of the oscillator |
 | `playEach`    | `number`      | undefined | play sound each number bars          |
