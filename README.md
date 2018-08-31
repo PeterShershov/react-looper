@@ -1,4 +1,4 @@
-![alt text](https://user-images.githubusercontent.com/16524839/44939852-1c368b80-ad91-11e8-8e8f-d15a196f4c2e.png)
+![alt text](https://user-images.githubusercontent.com/16524839/44940038-b4814000-ad92-11e8-94d8-d1ff31d8944c.png)
 
 Play an audio source or a sine wave in a loop
 
