@@ -66,15 +66,16 @@ class MyPlayer extends PureComponent {
 }
 ```
 
-## Available Props
+## Props
 
-| Name          | Type          | Default   | Description                                               |
-| :------------ | :------------ | :-------- | :-------------------------------------------------------- |
-| `looping`     | `boolean`     | false     | starts or stops your loop                                 |
-| `source`      | `AudioBuffer` | undefined | audio buffer to play each iteration                       |
-| `bpm`         | `number`      | 120       | sets the tempo of your loop                               |
-| `frequency`   | `number`      | 500       | sets the frequency of the oscillator                      |
-| `onIteration` | `function`    | () => {}  | function to invoke each iteration                         |
+| Name          | Type          | Default   | Description                          |
+| :------------ | :------------ | :-------- | :----------------------------------- |
+| `looping`     | `boolean`     | false     | starts or stops your loop            |
+| `source`      | `AudioBuffer` | undefined | audio buffer to play each iteration  |
+| `bpm`         | `number`      | 120       | sets the tempo of your loop          |
+| `frequency`   | `number`      | 500       | sets the frequency of the oscillator |
+| `playEach`    | `number`      | undefined | play sound each number bars          |
+| `onIteration` | `function`    | () => {}  | function to invoke each iteration    |
 
 If `source` is not provided, Looper will play a short sine that can be used as a metronome
 
