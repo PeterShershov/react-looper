@@ -2,7 +2,7 @@
 
 Web Audio API based Looper component for React
 
-- [x] - Connect your audioContext for maximum control 🎮
+- [x] - Connect your own `AudioContext` for maximum control 🎮
 - [x] - Build in oscillator as metronome (tick, tick, tick...💣)
 - [x] - Loop your audio file each X bars (just provide the arrayBuffer 👍)
 
