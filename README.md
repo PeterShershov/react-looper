@@ -1,6 +1,10 @@
 ![alt text](https://user-images.githubusercontent.com/16524839/44939852-1c368b80-ad91-11e8-8e8f-d15a196f4c2e.png)
 
-Play an audio source or a sine wave in a loop
+Web Audio API based Looper component for React
+
+- [x] - Connect your audioContext for maximum control 🎮
+- [x] - Build in oscillator as metronome (tick, tick, tick...💣)
+- [x] - Loop your audio file each X bars (just provide the arrayBuffer 👍)
 
 # Installation and usage
 
@@ -72,14 +76,15 @@ class MyPlayer extends PureComponent {
 
 ## Props
 
-| Name          | Type          | Default   | Description                          |
-| :------------ | :------------ | :-------- | :----------------------------------- |
-| `looping`     | `boolean`     | false     | starts or stops your loop            |
-| `source`      | `ArrayBuffer` | undefined | array buffer to play each iteration  |
-| `bpm`         | `number`      | 120       | sets the tempo of your loop          |
-| `frequency`   | `number`      | 500       | sets the frequency of the oscillator |
-| `playEach`    | `number`      | undefined | play sound each number bars          |
-| `onIteration` | `function`    | () => {}  | function to invoke each iteration    |
+| Name           | Type           | Default              | Description                          |
+| :------------- | :------------- | :------------------- | :----------------------------------- |
+| `audioContext` | `AudioContext` | `new AudioContext()` | AudioContext object                  |
+| `looping`      | `boolean`      | false                | starts or stops your loop            |
+| `source`       | `ArrayBuffer`  | undefined            | array buffer to play each iteration  |
+| `bpm`          | `number`       | 120                  | sets the tempo of your loop          |
+| `frequency`    | `number`       | 500                  | sets the frequency of the oscillator |
+| `playEach`     | `number`       | undefined            | play sound each number bars          |
+| `onIteration`  | `function`     | () => {}             | function to invoke each iteration    |
 
 If `source` is not provided, Looper will play a short sine that can be used as a metronome
 
