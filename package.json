@@ -6,7 +6,7 @@
   "module": "./esm/looper.js",
   "types": "./esm/looper.d.ts",
   "scripts": {
-		"prebuild": "yarn clean",
+    "prebuild": "yarn clean",
     "prepublish": "yarn build",
     "clean": "rimraf ./cjs ./esm",
     "build": "run-p build:cjs build:esm",
