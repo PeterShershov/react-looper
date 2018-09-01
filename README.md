@@ -1,5 +1,5 @@
 ![alt text](https://user-images.githubusercontent.com/16524839/44939852-1c368b80-ad91-11e8-8e8f-d15a196f4c2e.png)
-
+[![npm version](https://badge.fury.io/js/react-looper.svg)](https://badge.fury.io/js/react-looper)
 Web Audio API based Looper component for React
 
 - [x] - Connect your own `AudioContext` (or use the default one 🤖)
