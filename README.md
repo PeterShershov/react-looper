@@ -42,7 +42,6 @@ Compose your loop
 ```jsx
 <Looper looping bpm={85} source={kick} />
 <Looper looping bpm={85} playEach={2} source={snare} />
-<Looper looping bpm={85} playEach={0.75} source={rim} />
 <Looper looping bpm={85} playEach={0.5} source={hihat} />
 ```
 
