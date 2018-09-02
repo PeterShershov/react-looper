@@ -83,18 +83,24 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
   };
 
   private loop = () => {
-    const { bpm, source, playEach } = this.props;
+    const { bpm, source, playEach, looping, onIteration } = this.props;
 
-    source ? this.playAudioBufferSourceNode() : this.playOscillator();
-    this.props.onIteration && this.props.onIteration();
+    // playEach should skip the first iteration of playing a sound
+    if (!this.state.timeoutId && playEach) {
+      onIteration && onIteration();
+    } else {
+      source ? this.playAudioBufferSourceNode() : this.playOscillator();
+      onIteration && onIteration();
+    }
 
-    const ms = playEach ? bpmToMs(bpm) * playEach : bpmToMs(bpm);
+    if (looping) {
+      const ms = playEach ? bpmToMs(bpm) * playEach : bpmToMs(bpm);
 
-    this.props.looping &&
       this.setState({
         // saves the timeout id to clear it on stop
         timeoutId: setTimeout(this.loop, ms)
       });
+    }
   };
 
   private stop = () => {
@@ -103,6 +109,10 @@ export default class Looper extends PureComponent<LooperProps, LooperState> {
     }
 
     clearTimeout(this.state.timeoutId);
+
+    this.setState({
+      timeoutId: 0
+    });
   };
 
   render() {
