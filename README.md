@@ -14,66 +14,36 @@ Web Audio API based Looper component for React
 yarn add react-looper
 ```
 
+Simple metronome
+
 ```jsx
-import Looper from "react-looper";
+<Looper looping />
+```
 
-class MyPlayer extends PureComponent {
-  state = {
-    bpm: 120,
-    frequency: 500,
-    isPlaying: false
-  };
+Different BPM and Frequency
 
-  play = () =>
-    this.setState({
-      isPlaying: true
-    });
+```jsx
+<Looper looping bpm={85} frequency={600} />
+```
+Play each 4 bars
 
-  stop = () =>
-    this.setState({
-      isPlaying: false
-    });
+```jsx
+<Looper looping bpm={85} frequency={600} playEach={4} />
+```
 
-  changeBpm = e => {
-    const bpm = e.target.value;
-    this.setState({ bpm });
-  };
+Play arrayBuffer
 
-  changeFrequency = e => {
-    const frequency = e.target.value;
-    this.setState({ frequency });
-  };
+```jsx
+<Looper looping bpm={85} playEach={4} source={MyLovelyAudioFile} />
+```
 
-  onIteration = () => {
-    // do stuff
-  };
+Compose your loop
 
-  setSource = source => this.setState({ source });
-
-  render() {
-    const { bpm, source, isPlaying, frequency } = this.state;
-
-    return (
-      <Fragment>
-        <AudioUpload onChange={this.setSource} />
-        <FrequencyInput onChange={this.changeFrequency} value={frequency} />
-        <BPMInput onChange={this.changeBpm} value={bpm} />
-
-        <PlayButton onClick={this.play}>PLAY</PlayButton>
-        <StopButton onClick={this.stop}>STOP</StopButton>
-
-        <Looper
-          bpm={bpm}
-          playEach={4}
-          source={source}
-          looping={isPlaying}
-          frequency={frequency}
-          onIteration={this.onIteration}
-        />
-      </Fragment>
-    );
-  }
-}
+```jsx
+<Looper looping bpm={85} source={kick} />
+<Looper looping bpm={85} playEach={2} source={snare} />
+<Looper looping bpm={85} playEach={0.75} source={rim} />
+<Looper looping bpm={85} playEach={0.5} source={hihat} />
 ```
 
 ## Props
