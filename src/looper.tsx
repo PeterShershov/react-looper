@@ -28,12 +28,6 @@ export default class Looper extends PureComponent<ILooperProps> {
   private oscillator: OscillatorNode | undefined;
   private timeoutId: NodeJS.Timer | undefined;
 
-  /**
-   * Initializes audioContext if its not provided in props
-   * Loops if the looping prop if provided
-   *
-   * @memberof Looper
-   */
   public componentDidMount() {
     const { audioContext, looping } = this.props;
 
@@ -44,11 +38,6 @@ export default class Looper extends PureComponent<ILooperProps> {
     }
   }
 
-  /**
-   * Resets Looper's properties and clears the timeout
-   *
-   * @memberof Looper
-   */
   public componentWillUnmount() {
     this.oscillator = undefined;
     this.audioBuffer = undefined;
@@ -57,14 +46,6 @@ export default class Looper extends PureComponent<ILooperProps> {
     this.stop();
   }
 
-  /**
-   * Decodes an arrayBuffer to an audioBuffer if a new source is provided
-   * Loops if there's no loop running and if the looping prop is provided
-   * Stops if there's a loop running and if the looping prop is set to false
-   *
-   * @param {ILooperProps} { looping: loppingAlready }
-   * @memberof Looper
-   */
   public async componentDidUpdate({
     looping: loppingAlready,
     source: previousSource,
@@ -89,14 +70,6 @@ export default class Looper extends PureComponent<ILooperProps> {
     return null;
   }
 
-  /**
-   * Creates an oscillator
-   * Sets its frequency via the frequency prop
-   * Starts and stops it after 300 milliseconds to act a metronome
-   *
-   * @private
-   * @memberof Looper
-   */
   private playOscillator = () => {
     const { audioContext } = this;
 
@@ -107,13 +80,6 @@ export default class Looper extends PureComponent<ILooperProps> {
     this.oscillator!.stop(audioContext!.currentTime + SINE_DURATION);
   }
 
-  /**
-   * Creates an audioBufferSourceNode and starts it
-   * Stops an audioBufferSourceNode if it already exists
-   *
-   * @private
-   * @memberof Looper
-   */
   private playAudioBufferSourceNode = () => {
     const { audioContext } = this;
 
@@ -127,15 +93,6 @@ export default class Looper extends PureComponent<ILooperProps> {
     this.audioBufferSourceNode!.start(0);
   }
 
-  /**
-   * Plays a source or an oscillator at a provided bpm
-   * Invokes the onIteration method each iteration
-   * Skips the first iteration if the playEach prop is provided
-   * Sets a new timeoutId to clear it later
-   *
-   * @private
-   * @memberof Looper
-   */
   private loop = () => {
     const { bpm, source, playEach, looping, onIteration } = this.props;
 
@@ -152,13 +109,6 @@ export default class Looper extends PureComponent<ILooperProps> {
     }
   }
 
-  /**
-   * Stops an audioBufferSourceNode if exists
-   * Clears the timeout and sets timeoutId to undefined
-   *
-   * @private
-   * @memberof Looper
-   */
   private stop = () => {
     if (this.audioBufferSourceNode) {
       this.audioBufferSourceNode.stop();
