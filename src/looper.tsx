@@ -1,121 +1,171 @@
 import { PureComponent } from "react";
 
-interface LooperProps {
+export interface ILooperProps {
+  audioContext?: AudioContext;
   bpm: number;
-  looping: boolean;
   frequency: number;
-  source?: ArrayBuffer;
-  onIteration?: () => void;
+  looping: boolean;
+  onIteration: () => void;
   playEach?: number;
-  audioContext: AudioContext;
+  source?: ArrayBuffer;
 }
-
-interface LooperState {
-  timeoutId: number;
-}
-
-const SINE_DURATION = 0.03;
-const DEFAULT_AUDIO_CONTEXT = new AudioContext();
 
 const bpmToMs = (bpm: number) => Math.floor(60000 / bpm);
+const noop = () => undefined;
+const SINE_DURATION = 0.03;
 
-export default class Looper extends PureComponent<LooperProps, LooperState> {
-  state = {
-    timeoutId: 0
-  };
-
-  static defaultProps = {
+export default class Looper extends PureComponent<ILooperProps> {
+  public static defaultProps = {
     bpm: 120,
     frequency: 500,
     looping: false,
-    audioContext: DEFAULT_AUDIO_CONTEXT
+    onIteration: noop,
   };
 
-  private oscillator: OscillatorNode | undefined;
   private audioBuffer: AudioBuffer | undefined;
   private audioBufferSourceNode: AudioBufferSourceNode | undefined;
+  private audioContext: AudioContext | undefined;
+  private oscillator: OscillatorNode | undefined;
+  private timeoutId: NodeJS.Timer | undefined;
 
-  componentDidMount() {
-    this.props.looping && this.loop();
+  /**
+   * Initializes audioContext if its not provided in props
+   * Loops if the looping prop if provided
+   *
+   * @memberof Looper
+   */
+  public componentDidMount() {
+    const { audioContext, looping } = this.props;
+
+    this.audioContext = audioContext || new AudioContext();
+
+    if (looping) {
+      this.loop();
+    }
   }
 
-  componentWillUnmount() {
+  /**
+   * Resets Looper's properties and clears the timeout
+   *
+   * @memberof Looper
+   */
+  public componentWillUnmount() {
     this.oscillator = undefined;
     this.audioBuffer = undefined;
+    this.audioContext = undefined;
     this.audioBufferSourceNode = undefined;
     this.stop();
   }
 
-  async componentDidUpdate({ looping: loppingAlready }: LooperProps) {
-    const { looping: shouldLoop, source, audioContext } = this.props;
-
+  /**
+   * Decodes an arrayBuffer to an audioBuffer if a new source is provided
+   * Loops if there's no loop running and if the looping prop is provided
+   * Stops if there's a loop running and if the looping prop is set to false
+   *
+   * @param {ILooperProps} { looping: loppingAlready }
+   * @memberof Looper
+   */
+  public async componentDidUpdate({
+    looping: loppingAlready,
+    source: previousSource,
+  }: ILooperProps) {
+    const { looping: shouldLoop, source } = this.props;
+    const { audioContext } = this;
     // TODO: replace !this.audioBuffer with old/new arrayBuffer comparison
     //       to support auto update when source changes
-    if (source && !this.audioBuffer) {
-      this.audioBuffer = await audioContext.decodeAudioData(source!);
+    if (source !== previousSource) {
+      this.audioBuffer = await audioContext!.decodeAudioData(source!);
     }
 
-    shouldLoop && !loppingAlready && this.loop();
-    !shouldLoop && loppingAlready && this.stop();
+    if (shouldLoop && !loppingAlready) {
+      this.loop();
+    }
+
+    if (!shouldLoop && loppingAlready) {
+      this.stop();
+    }
   }
 
-  private playOscillator = () => {
-    const { audioContext } = this.props;
+  public render() {
+    return null;
+  }
 
-    this.oscillator = audioContext.createOscillator();
-    this.oscillator.connect(audioContext.destination);
+  /**
+   * Creates an oscillator
+   * Sets its frequency via the frequency prop
+   * Starts and stops it after 300 milliseconds to act a metronome
+   *
+   * @private
+   * @memberof Looper
+   */
+  private playOscillator = () => {
+    const { audioContext } = this;
+
+    this.oscillator = audioContext!.createOscillator();
+    this.oscillator.connect(audioContext!.destination);
     this.oscillator!.frequency.value = this.props.frequency;
     this.oscillator!.start();
-    this.oscillator!.stop(this.props.audioContext.currentTime + SINE_DURATION);
-  };
+    this.oscillator!.stop(audioContext!.currentTime + SINE_DURATION);
+  }
 
+  /**
+   * Creates an audioBufferSourceNode and starts it
+   * Stops an audioBufferSourceNode if it already exists
+   *
+   * @private
+   * @memberof Looper
+   */
   private playAudioBufferSourceNode = () => {
-    const { audioContext } = this.props;
+    const { audioContext } = this;
 
     if (this.audioBufferSourceNode) {
       this.audioBufferSourceNode.stop();
     }
 
-    this.audioBufferSourceNode = audioContext.createBufferSource();
+    this.audioBufferSourceNode = audioContext!.createBufferSource();
     this.audioBufferSourceNode.buffer = this.audioBuffer!;
-    this.audioBufferSourceNode.connect(audioContext.destination);
+    this.audioBufferSourceNode.connect(audioContext!.destination);
     this.audioBufferSourceNode!.start(0);
-  };
+  }
 
+  /**
+   * Plays a source or an oscillator at a provided bpm
+   * Invokes the onIteration method each iteration
+   * Skips the first iteration if the playEach prop is provided
+   * Sets a new timeoutId to clear it later
+   *
+   * @private
+   * @memberof Looper
+   */
   private loop = () => {
     const { bpm, source, playEach, looping, onIteration } = this.props;
 
-    // playEach should skip the first iteration of playing a sound
-    if (!this.state.timeoutId && playEach) {
-      onIteration && onIteration();
+    if (!this.timeoutId && playEach) {
+      onIteration();
     } else {
       source ? this.playAudioBufferSourceNode() : this.playOscillator();
-      onIteration && onIteration();
+      onIteration();
     }
 
     if (looping) {
       const ms = playEach ? bpmToMs(bpm) * playEach : bpmToMs(bpm);
-
-      this.setState({
-        // saves the timeout id to clear it on stop
-        timeoutId: setTimeout(this.loop, ms)
-      });
+      this.timeoutId = setTimeout(this.loop, ms);
     }
-  };
+  }
 
+  /**
+   * Stops an audioBufferSourceNode if exists
+   * Clears the timeout and sets timeoutId to undefined
+   *
+   * @private
+   * @memberof Looper
+   */
   private stop = () => {
     if (this.audioBufferSourceNode) {
       this.audioBufferSourceNode.stop();
     }
 
-    clearTimeout(this.state.timeoutId);
-
-    this.setState({
-      timeoutId: 0
-    });
-  };
-
-  render() {
-    return null;
+    clearTimeout(this.timeoutId!);
+    this.timeoutId = undefined;
   }
 }
