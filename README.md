@@ -4,9 +4,10 @@
 
 Web Audio API based Looper component for React
 
-- [x] - Connect your own `AudioContext` (or use the default one 🤖)
-- [x] - Built-in oscillator as metronome (tick, tick, tick...💣)
-- [x] - Loop your audio file each X bars (just provide the arrayBuffer 👍)
+- [x] - Connect your own `AudioContext` (or use the default one :robot:)
+- [x] - Built-in oscillator as metronome (tick, tick, tick...:bomb:)
+- [x] - Provide your own audio file as arrayBuffer (nsync_-_bye_bye_bye.mp3 :see_no_evil:)
+- [x] - Loop your sound each X bars (cowbell each 4 bars :cow:)
 
 # Installation and usage
 
