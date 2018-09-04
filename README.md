@@ -62,4 +62,4 @@ If `source` is not provided, Looper will play a short sine that can be used as a
 
 ## License
 
-MIT Licensed. Copyright (c) Peter Sherhsov 2018.
+MIT Licensed. Copyright (c) Peter Shershov 2018.
