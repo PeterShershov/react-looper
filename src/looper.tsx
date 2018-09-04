@@ -71,8 +71,7 @@ export default class Looper extends PureComponent<ILooperProps> {
   }: ILooperProps) {
     const { looping: shouldLoop, source } = this.props;
     const { audioContext } = this;
-    // TODO: replace !this.audioBuffer with old/new arrayBuffer comparison
-    //       to support auto update when source changes
+
     if (source !== previousSource) {
       this.audioBuffer = await audioContext!.decodeAudioData(source!);
     }
