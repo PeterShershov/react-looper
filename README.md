@@ -4,10 +4,9 @@
 
 Web Audio API based Looper component for React
 
-- [x] - Connect your own `AudioContext` (or use the default one :robot:)
-- [x] - Built-in oscillator as metronome (tick, tick, tick...:bomb:)
-- [x] - Provide your own audio file as arrayBuffer (nsync_-_bye_bye_bye.mp3 :see_no_evil:)
-- [x] - Loop your sound each X bars (cowbell each 4 bars :cow:)
+- [x] - Connect your own `AudioContext` (or use the default one 🤖)
+- [x] - Built-in oscillator as metronome (tick, tick, tick...💣)
+- [x] - Loop your audio file each X bars (just provide the arrayBuffer 👍)
 
 # Installation and usage
 
@@ -15,51 +14,69 @@ Web Audio API based Looper component for React
 yarn add react-looper
 ```
 
-Simple metronome
+Metronome
 
 ```jsx
-<Looper looping />
+import Looper from "react-looper";
+
+<Looper playing />;
 ```
 
-Different BPM and Frequency
+99 BPM
 
 ```jsx
-<Looper looping bpm={85} frequency={600} />
+<Looper bpm={99} playing />
 ```
+
 Play each 4 bars
 
 ```jsx
-<Looper looping bpm={85} frequency={600} playEach={4} />
+<Looper bpm={99} playEach={4} playing />
 ```
 
-Play arrayBuffer
-
-```jsx
-<Looper looping bpm={85} playEach={4} source={MyLovelyAudioFile} />
-```
-
-Compose your loop
-
-```jsx
-<Looper looping bpm={85} source={kick} />
-<Looper looping bpm={85} playEach={2} source={snare} />
-<Looper looping bpm={85} playEach={0.5} source={hihat} />
-```
 
 ## Props
 
 | Name           | Type           | Default              | Description                          |
 | :------------- | :------------- | :------------------- | :----------------------------------- |
 | `audioContext` | `AudioContext` | `new AudioContext()` | AudioContext object                  |
-| `looping`      | `boolean`      | false                | starts or stops your loop            |
-| `source`       | `ArrayBuffer`  | undefined            | array buffer to play each iteration  |
-| `bpm`          | `number`       | 120                  | sets the tempo of your loop          |
-| `frequency`    | `number`       | 500                  | sets the frequency of the oscillator |
-| `playEach`     | `number`       | undefined            | play sound each number bars          |
-| `onIteration`  | `function`     | () => {}             | function to invoke each iteration    |
+| `bpm`          | `number`       | `120`                  | sets the tempo of your loop          |
+| `looping`      | `boolean`      | `false`                | starts or stops your loop            |
+| `onIteration`  | `function`     | `() => {}`             | function to invoke each iteration    |
+| `playEach`     | `number`       | `undefined`            | play sound each number bars          |
+| `source`       | `ArrayBuffer`  | `undefined`            | array buffer to play each iteration  |
 
-If `source` is not provided, Looper will play a short sine that can be used as a metronome
+## Additional props
+
+`oscillator`
+
+This object can be provided in order to configure Looper's oscillator and its duration (ms).
+
+| Name           | Type           | Default              | Description                          |
+| :------------- | :------------- | :------------------- | :----------------------------------- |
+| `detune`       | `number`       | `0`                    | [OscillatorNode.detune](https://developer.mozilla.org/en-US/docs/Web/API/OscillatorNode/detune)                |
+| `duration` 	 | `number` 	  | `0` 				     | duration of the tone in milliseconds |
+| `frequency`      | `number`      | `false`                | [OscillatorNode.frequency](https://developer.mozilla.org/en-US/docs/Web/API/OscillatorNode/frequency)                         |
+| `type`      | `string`      | `"sine"`                | [OscillatorNode.type](https://developer.mozilla.org/en-US/docs/Web/API/OscillatorNode/type)                    |
+
+
+```jsx
+const oscillatorConfig = {
+	duration: 0.05,
+	detune: 1,
+	frequency: 555,
+	type: "square",
+}
+
+<Looper playing oscillator={oscillatorConfig} />
+```
+
+Notice that these properties are passed as primitive values and not as an object like native oscillator properties.
+
+e.g. `frequency` is a number instead of an object with a `value` property.
+
+[Click here](https://developer.mozilla.org/en-US/docs/Web/API/OscillatorNode) for more information about Web Audio API Oscillator.
 
 ## License
 
-MIT Licensed. Copyright (c) Peter Shershov 2018.
+MIT Licensed. Copyright (c) Peter Sherhsov 2018.

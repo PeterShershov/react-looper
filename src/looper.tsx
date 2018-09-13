@@ -1,18 +1,29 @@
 import { PureComponent } from "react";
 
+export interface IOscillator {
+  duration?: number;
+  detune?: number;
+  frequency?: number;
+  type?: OscillatorType;
+  onEnded?: (audioScheduledSourceNode: AudioScheduledSourceNode, e: Event) => void;
+}
+
 export interface ILooperProps {
   audioContext?: AudioContext;
   bpm: number;
-  frequency: number;
   looping: boolean;
+  oscillator?: IOscillator;
   onIteration: () => void;
   playEach?: number;
   source?: ArrayBuffer;
 }
 
+export interface ILooperState {
+  oscillator: IOscillator;
+}
+
 const bpmToMs = (bpm: number) => Math.floor(60000 / bpm);
 const noop = () => undefined;
-const SINE_DURATION = 0.03;
 
 export default class Looper extends PureComponent<ILooperProps> {
   public static defaultProps = {
@@ -22,16 +33,29 @@ export default class Looper extends PureComponent<ILooperProps> {
     onIteration: noop,
   };
 
+  public state: ILooperState = {
+    oscillator: {
+      detune: 0,
+      duration: 0.03,
+      frequency: 500,
+      type: "sine",
+    },
+  };
+
   private audioBuffer: AudioBuffer | undefined;
   private audioBufferSourceNode: AudioBufferSourceNode | undefined;
   private audioContext: AudioContext | undefined;
   private oscillator: OscillatorNode | undefined;
   private timeoutId: NodeJS.Timer | undefined;
 
-  public componentDidMount() {
-    const { audioContext, looping } = this.props;
+  public async componentDidMount() {
+    const { audioContext, looping, oscillator } = this.props;
 
     this.audioContext = audioContext || new AudioContext();
+
+    if (oscillator) {
+      await this.updateOscillator();
+    }
 
     if (looping) {
       this.loop();
@@ -49,19 +73,22 @@ export default class Looper extends PureComponent<ILooperProps> {
   public async componentDidUpdate({
     looping: loppingAlready,
     source: previousSource,
+    oscillator: prevoscillator,
   }: ILooperProps) {
-    const { looping: shouldLoop, source } = this.props;
+    const { looping: shouldLoop, oscillator, source } = this.props;
     const { audioContext } = this;
 
     if (source !== previousSource) {
       this.audioBuffer = await audioContext!.decodeAudioData(source!);
     }
 
-    if (shouldLoop && !loppingAlready) {
-      this.loop();
+    if (oscillator !== prevoscillator) {
+      this.updateOscillator();
     }
 
-    if (!shouldLoop && loppingAlready) {
+    if (shouldLoop && !loppingAlready) {
+      this.loop();
+    } else if (!shouldLoop && loppingAlready) {
       this.stop();
     }
   }
@@ -71,13 +98,30 @@ export default class Looper extends PureComponent<ILooperProps> {
   }
 
   private playOscillator = () => {
+    const { oscillator } = this.state;
     const { audioContext } = this;
+
+    if (this.oscillator) {
+      this.oscillator.stop();
+    }
 
     this.oscillator = audioContext!.createOscillator();
     this.oscillator.connect(audioContext!.destination);
-    this.oscillator!.frequency.value = this.props.frequency;
-    this.oscillator!.start();
-    this.oscillator!.stop(audioContext!.currentTime + SINE_DURATION);
+    this.oscillator.frequency.value = oscillator.frequency!;
+    this.oscillator.detune.value = oscillator.detune!;
+    this.oscillator.type = oscillator.type!;
+    this.oscillator.start();
+    this.oscillator.stop(audioContext!.currentTime + oscillator.duration!);
+  }
+
+  private updateOscillator = () => {
+    this.setState({
+      oscillator: {
+        ...this.state.oscillator,
+        ...this.props.oscillator,
+      },
+    });
+
   }
 
   private playAudioBufferSourceNode = () => {
