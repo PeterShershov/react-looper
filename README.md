@@ -17,9 +17,9 @@ yarn add react-looper
 Metronome
 
 ```jsx
-import Looper from "react-looper";
+import Looper from "react-looper"
 
-<Looper playing />;
+<Looper playing />
 ```
 
 99 BPM
