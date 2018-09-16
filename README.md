@@ -42,9 +42,10 @@ Play each 4 bars
 | `audioContext` | `AudioContext` | `new AudioContext()` | AudioContext object                  |
 | `bpm`          | `number`       | `120`                  | sets the tempo of your loop          |
 | `looping`      | `boolean`      | `false`                | starts or stops your loop            |
+| `source`       | `ArrayBuffer`  | `undefined`            | audio file to play each iteration |
 | `onIteration`  | `function`     | `() => {}`             | function to invoke each iteration    |
-| `playEach`     | `number`       | `undefined`            | play sound each number bars          |
-| `source`       | `ArrayBuffer`  | `undefined`            | array buffer to play each iteration  |
+| `playEach`     | `number`       | `undefined`            | play sound each number of iterations          |
+
 
 ## Additional props
 
@@ -60,6 +61,7 @@ This object can be provided in order to configure Looper's oscillator and its du
 | `type`      | `string`      | `"sine"`                | [OscillatorNode.type](https://developer.mozilla.org/en-US/docs/Web/API/OscillatorNode/type)                    |
 
 
+
 ```jsx
 const oscillatorConfig = {
 	duration: 0.05,
@@ -70,12 +72,6 @@ const oscillatorConfig = {
 
 <Looper playing oscillator={oscillatorConfig} />
 ```
-
-Notice that these properties are passed as primitive values and not as an object like native oscillator properties.
-
-e.g. `frequency` is a number instead of an object with a `value` property.
-
-[Click here](https://developer.mozilla.org/en-US/docs/Web/API/OscillatorNode) for more information about Web Audio API Oscillator.
 
 ## License
 
