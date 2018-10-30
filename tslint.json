@@ -1,9 +1,20 @@
 {
-    "defaultSeverity": "error",
-    "extends": [
-        "tslint:recommended"
-    ],
-    "jsRules": {},
-    "rules": {},
-    "rulesDirectory": []
+	"defaultSeverity": "error",
+	"extends": [
+		"tslint:recommended",
+		"tslint-react"
+	],
+	"jsRules": {},
+	"rules": {
+		"quotemark": [
+			true,
+			"jsx-double"
+		],
+		"variable-name": [
+			true,
+			"allow-leading-underscore",
+			"allow-pascal-case"
+		]
+	},
+	"rulesDirectory": []
 }
