@@ -7,6 +7,7 @@
   "types": "./esm/looper.d.ts",
   "scripts": {
     "prebuild": "yarn clean",
+    "prepublish": "yarn build",
     "clean": "rimraf ./cjs ./esm",
     "build": "run-p build:cjs build:esm",
     "build:cjs": "tsc --outDir cjs --module commonjs",
@@ -19,7 +20,8 @@
     "@types/react-dom": "^16.0.9",
     "jest": "^23.6.0",
     "npm-run-all": "^4.1.3",
-		"parcel": "^1.10.3",
+    "parcel": "^1.10.3",
+    "prepublish": "^2.2.0",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "ts-jest": "^23.10.4",
