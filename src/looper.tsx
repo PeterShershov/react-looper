@@ -2,7 +2,7 @@ import { PureComponent } from "react";
 
 import { ILooperProps, ILooperState } from "./types";
 
-const bpmToMs = (bpm: number) => Math.floor(60000 / bpm);
+export const bpmToMs = (bpm: number) => Math.floor(60000 / bpm);
 const noop = () => undefined;
 
 export default class Looper extends PureComponent<ILooperProps> {
